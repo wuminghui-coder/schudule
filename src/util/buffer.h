@@ -9,6 +9,7 @@ typedef struct
     uint8_t frame_type;       // 帧类型
     uint32_t timestamp;       // 时间戳
     uint32_t index;
+	uint32_t rindex;
     uint32_t length;
     uint8_t  data[];
 } Buffer;
@@ -21,7 +22,7 @@ static inline Buffer *createBuffer(size_t size)
 		return NULL;
 	}
 
-	buffer->index  = 0;
+	buffer->index  = buffer->rindex = 0;
 	buffer->length = size;
 
 	buffer->timestamp  = 0;
@@ -59,7 +60,7 @@ static inline Buffer *createFrameBuffer(uint8_t *frame, size_t frame_len, uint8_
 		return NULL;
 	}
 
-	buffer->index  = 0;
+	buffer->index  = buffer->rindex = 0;
 	buffer->length = frame_len;
 
 	buffer->timestamp  = timestamp;
@@ -126,13 +127,13 @@ static inline void writeBufferU(Buffer *buffer, int index, int pos, int n, uint3
 static inline Buffer* reinitializeBuffer(Buffer* buffer, const uint8_t* new_data, uint32_t new_length) 
 {
 	if (!buffer || !new_data)
-		return NULL;
+		return buffer;
 
     uint32_t total_length = buffer->length + new_length;
 
     Buffer* new_buffer = (Buffer*)realloc(buffer, sizeof(Buffer) + total_length * sizeof(uint8_t));
     if (!new_buffer) 
-        return NULL; 
+        return buffer; 
 
     memcpy(buffer->data + buffer->length, new_data, new_length);
 
