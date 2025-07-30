@@ -108,7 +108,7 @@ static void *_eventLoop(void *obj)
         timeout = _triggerEvent(scher);
 
         timeout += _timerEvent(scher);
-
+  
         if (scher->ops->dispatch(scher->context, timeout)) 
             ERR("dispatch failed");
     }
@@ -334,9 +334,9 @@ TaskScheduler * createTaskScheduler(void)
         if (!scher->signalEvents)
             break;
 
-        CREATE_THREAD(scher->workerThread, _eventLoop, (void *)scher, NULL);
-
         scher->isRunning = SHECH_RUNNING;
+
+        CREATE_THREAD(scher->workerThread, _eventLoop, (void *)scher, NULL);
 
         DBG("task scheduler started %p", scher);
     } while (0);
