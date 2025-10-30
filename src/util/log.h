@@ -12,7 +12,7 @@ enum {
 };
 
 #ifndef LOG_LEVEL
-#define LOG_LEVEL  LOG_LEVEL_ERR
+#define LOG_LEVEL  LOG_LEVEL_DEBUG
 #endif
 
 #define RED_COLOR "\033[0;31m"
